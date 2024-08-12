@@ -37,6 +37,9 @@ def process_image():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+@app.route('/api/hello', methods=['GET'])
+def hello_world():
+    return "Hello, World!"
 if __name__ == '__main__':
     utils.load_model()
     app.run(port=5328)
@@ -44,10 +47,10 @@ if __name__ == '__main__':
 # from flask import Flask
 # app = Flask(__name__)
 
-@app.route('/api/hello', methods=['GET'])
-def hello_world():
-    return "Hello, World!"
+# @app.route('/api/hello', methods=['GET'])
+# def hello_world():
+#     return "Hello, World!"
 
-if __name__ == '__main__':
-    utils.load_model()
-    app.run(port=5328)
+# if __name__ == '__main__':
+#     utils.load_model()
+#     app.run(port=5328)
