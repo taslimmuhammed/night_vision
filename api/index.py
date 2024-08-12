@@ -47,8 +47,6 @@ if __name__ == '__main__':
 @app.route('/api/hello', methods=['GET'])
 def hello_world():
     return "Hello, World!"
-@app.route('/api/', methods=['GET'])
-def hello_world():
-    return "Hello, World!"
+
 if __name__ == '__main__':
     app.run(port=5328)
