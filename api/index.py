@@ -40,6 +40,7 @@ def process_image():
 @app.route('/api/hello', methods=['GET'])
 def hello_world():
     return "Hello, World!"
+
 if __name__ == '__main__':
     utils.load_model()
     app.run(port=5328)
