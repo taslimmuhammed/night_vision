@@ -1,4 +1,4 @@
-# numpy==1.24.3
 Flask==3.0.3
 tflite==2.3.0
 pillow==10.2.0
+numpy==1.26.4
