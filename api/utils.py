@@ -1,7 +1,6 @@
 import numpy as np
 from PIL import Image
 import tensorflow as tf
-
 _model = None
 
 def load_model():
