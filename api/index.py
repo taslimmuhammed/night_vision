@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 import utils
 app = Flask(__name__)
-print("Loaading Model------------------")
 @app.route('/api/process_image', methods=['POST'])
 def process_image():
     if 'image' not in request.json:
@@ -36,22 +35,10 @@ def process_image():
         }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
-@app.route('/api/hello', methods=['GET'])
-def hello_world():
-    return "Hello, World!"
+@app.route('/api/test', methods=['GET'])
+def test():
+    return jsonify({'message': 'Test endpoint working'}), 200
 
 if __name__ == '__main__':
-    utils.load_model()
+    utils.load_modal()
     app.run(port=5328)
-
-# from flask import Flask
-# app = Flask(__name__)
-
-# @app.route('/api/hello', methods=['GET'])
-# def hello_world():
-#     return "Hello, World!"
-
-# if __name__ == '__main__':
-#     utils.load_model()
-#     app.run(port=5328)

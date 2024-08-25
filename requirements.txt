@@ -1,4 +1,4 @@
 Flask==3.0.3
-tflite==2.3.0
-pillow==10.2.0
-numpy==1.26.4
+Tensorflow==2.17.0
+Numpy==1.26.4
+Opencv-python==4.9.0.80

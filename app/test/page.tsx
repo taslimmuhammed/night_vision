@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 
@@ -11,7 +12,7 @@ function ModelTest() {
   useEffect(() => {
     async function loadModel() {
       try {
-        const loadedModel = await tf.loadLayersModel('/model.json');
+        const loadedModel = await tf.loadLayersModel('/api/tfjs/model.json');
         setModel(loadedModel);
         console.log('Model loaded successfully');
       } catch (error) {
