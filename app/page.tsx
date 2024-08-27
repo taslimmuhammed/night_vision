@@ -91,7 +91,7 @@ export default function Home() {
         <div className={styles.sampleImages}>
           <div className={styles.sampleImage}>
             <Image
-              src="/dark-image.jpg"
+              src="/test3.png"
               alt="Dark scene"
               width={300}
               height={200}
@@ -99,9 +99,12 @@ export default function Home() {
             />
             <p className={styles.imageLabel}>Before</p>
           </div>
+          <span>
+            -{'>'}
+          </span>
           <div className={styles.sampleImage}>
             <Image
-              src="/light-image.jpg"
+              src="/result.jpg"
               alt="Light scene"
               width={300}
               height={200}
@@ -122,7 +125,7 @@ export default function Home() {
             className={styles.fileInput}
             onChange={handleImageChange}
           />
-
+          <div className={styles.bottom_flex}>
           {selectedImage && (
             <div className={styles.selectedImageContainer}>
               <Image
@@ -140,7 +143,6 @@ export default function Home() {
 
           {transformedImage && (
             <div className={styles.transformedImageContainer}>
-              <h2 className={styles.subheading}>Transformed Image</h2>
               <Image
                 src={transformedImage}
                 alt="Transformed image"
@@ -148,8 +150,12 @@ export default function Home() {
                 height={200}
                 className={styles.image}
               />
+              <button onClick={downloadImage} className={styles.downloadButton}>
+                download
+              </button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>
