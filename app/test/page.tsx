@@ -25,17 +25,10 @@ function ModelTest() {
   async function runPrediction() {
     if (model) {
       try {
-        // Create a sample input tensor with correct type and shape
         const sampleInput = tf.tensor4d([Array(500 * 500 * 3).fill(0)], [1, 500, 500, 3], 'float32');
-        
-        // Run prediction
         const result = model.predict(sampleInput) as tf.Tensor;
-
-        // Extract the data from the prediction tensor
         const predictionData = await result.data();
         setPrediction(Array.from(predictionData));
-
-        // Clean up tensors to prevent memory leaks
         sampleInput.dispose();
         result.dispose();
       } catch (error) {

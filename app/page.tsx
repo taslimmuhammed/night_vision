@@ -1,45 +1,69 @@
-'use client';
-// pages/index.js
-import { ChangeEventHandler, useState } from 'react';
-import Head from 'next/head';
+"use client";
+import { useState } from 'react';
+import Image from 'next/image';
+import styles from './NightVision.module.css';
 
 export default function Home() {
-  const [selectedImage, setSelectedImage] = useState(String);
-  const [processedImage, setProcessedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [transformedImage, setTransformedImage] = useState<string | null>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files==null) return ;
-    const file = e.target?.files[0]
+  const imageUrltoBase64 = async (imageUrl: string): Promise<string> => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result) {
+            let str = reader.result.toString().split(",")[1]
+            resolve(str);
+          } else {
+            reject(new Error("Failed to convert image to base64."));
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      throw new Error(`Failed to fetch image from URL: ${error}`);
+    }
+  };
+  const base64toImage = (base64str:string)=>{
+    let img = `data:image/jpeg;base64,${base64str}`
+    return img
+  }
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result as string; // Assertion
-        if (result==null) return;
-        setSelectedImage(result.split(',')[1]);
+        setSelectedImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const processImage = async () => {
+  const handleTransform = async() => {
     if (!selectedImage) {
       alert('Please select an image first');
       return;
     }
-
+    let base64Image = await imageUrltoBase64(selectedImage)
+    console.log(base64Image);
+    
     try {
       const response = await fetch('/api/process_image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ image: selectedImage }),
+        body: JSON.stringify({ image: base64Image }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setProcessedImage(data.image);
+        setTransformedImage(base64toImage(data.image));
       } else {
         alert(`Error: ${data.error}`);
       }
@@ -50,53 +74,75 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
-      <Head>
-        <title>Image Processor</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <h1 className={styles.heading}>Night Vision</h1>
+        <p className={styles.description}>Convert images to light using AI</p>
 
-      <main>
-        <h1>Image Processor</h1>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        <button onClick={processImage}>Process Image</button>
-
-        {selectedImage && (
-          <div>
-            <h2>Selected Image:</h2>
-            <img src={`data:image/jpeg;base64,${selectedImage}`} alt="Selected" style={{ maxWidth: '100%' }} />
+        <div className={styles.sampleImages}>
+          <div className={styles.sampleImage}>
+            <Image
+              src="/dark-image.jpg"
+              alt="Dark scene"
+              width={300}
+              height={200}
+              className={styles.image}
+            />
+            <p className={styles.imageLabel}>Before</p>
           </div>
-        )}
-
-        {processedImage && (
-          <div>
-            <h2>Processed Image:</h2>
-            <img src={`data:image/jpeg;base64,${processedImage}`} alt="Processed" style={{ maxWidth: '100%' }} />
+          <div className={styles.sampleImage}>
+            <Image
+              src="/light-image.jpg"
+              alt="Light scene"
+              width={300}
+              height={200}
+              className={styles.image}
+            />
+            <p className={styles.imageLabel}>After</p>
           </div>
-        )}
-      </main>
+        </div>
 
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        input, button {
-          margin: 10px 0;
-        }
-      `}</style>
+        <div className={styles.uploadSection}>
+          <label htmlFor="image-upload" className={styles.selectButton}>
+            Select Image
+          </label>
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            className={styles.fileInput}
+            onChange={handleImageChange}
+          />
+
+          {selectedImage && (
+            <div className={styles.selectedImageContainer}>
+              <Image
+                src={selectedImage}
+                alt="Selected image"
+                width={300}
+                height={200}
+                className={styles.image}
+              />
+              <button onClick={handleTransform} className={styles.transformButton}>
+                Transform
+              </button>
+            </div>
+          )}
+
+          {transformedImage && (
+            <div className={styles.transformedImageContainer}>
+              <h2 className={styles.subheading}>Transformed Image</h2>
+              <Image
+                src={transformedImage}
+                alt="Transformed image"
+                width={300}
+                height={200}
+                className={styles.image}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
