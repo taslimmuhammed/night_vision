@@ -72,7 +72,16 @@ export default function Home() {
       alert('An error occurred while processing the image');
     }
   };
-
+  const downloadImage = () => {
+    if (transformedImage) {
+      const link = document.createElement('a');
+      link.href = transformedImage;
+      link.download = 'tranformed.jpg'; // The name of the downloaded image
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
   return (
     <div className={styles.container}>
       <div className={styles.content}>

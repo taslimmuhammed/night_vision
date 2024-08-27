@@ -12,13 +12,8 @@ def process_image():
     image_data = request.json['image']
     
     try:
-        # Decode base64 image data
         image_bytes = base64.b64decode(image_data)
-        
-        # Convert to numpy array
         nparr = np.frombuffer(image_bytes, np.uint8)
-        
-        # Read image using OpenCV
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
         if img is None:
